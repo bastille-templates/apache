@@ -4,20 +4,20 @@ PKG apache24
 RESTART
 
 # configure apache
-CMD sed -i '' 's%ServerAdmin you@example.com%ServerAdmin admin@${JAIL_IP}%g' /usr/local/etc/apache24/httpd.conf
-CMD sed -i '' 's%#ServerName www.example.com:80%ServerName ${JAIL_IP}:80%g' /usr/local/etc/apache24/httpd.conf
+CMD sed -i '' 's%ServerAdmin you@example.com%ServerAdmin admin@${JAIL_HOSTNAME}.domain%g' /usr/local/etc/apache24/httpd.conf
+CMD sed -i '' 's%#ServerName www.example.com:80%ServerName www.${JAIL_HOSTNAME}.domain:80%g' /usr/local/etc/apache24/httpd.conf
 CMD sed -i '' 's%Options Indexes FollowSymLinks%Options FollowSymLinks%g' /usr/local/etc/apache24/httpd.conf
 CMD sed -i '' 's%AllowOverride None%AllowOverride All%g' /usr/local/etc/apache24/httpd.conf
 CMD sed -i '' 's%DirectoryIndex index.html%DirectoryIndex index.html index.php index.cgi%g' /usr/local/etc/apache24/httpd.conf
-CMD sed -i '' 's/CustomLog "%var%log%httpd-access.log" common/#CustomLog "%var%log%httpd-access.log" common/g' /usr/local/etc/apache24/httpd.conf
-CMD sed -i '' 's/#CustomLog "%var%log%httpd-access.log" combined/CustomLog "%var%log%httpd-access.log" combined/g' /usr/local/etc/apache24/httpd.conf
-CMD sed -i '' '/httpd-default.conf/s/#Include/Include/g' /usr/local/etc/apache24/httpd.conf
+CMD sed -i '' 's/CustomLog "\/var\/log\/httpd-access.log" common/#CustomLog "\/var\/log\/httpd-access.log" common/g' /usr/local/etc/apache24/httpd.conf
+CMD sed -i '' 's/#CustomLog "\/var\/log\/httpd-access.log" combined/CustomLog "\/var\/log\/httpd-access.log" combined/g' /usr/local/etc/apache24/httpd.conf
+CMD sed -i '' 's/httpd-default.conf/s/#Include/Include/g' /usr/local/etc/apache24/httpd.conf
 CMD sed -i '' 's%ServerTokens Full%ServerTokens Prod%g' /usr/local/etc/apache24/extra/httpd-default.conf
-CMD openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /usr/local/etc/apache24/server.key -out /usr/local/etc/apache24/server.crt -subj "/C=ID/ST=Bangka Belitung/L=Pangkalpinang/O=${JAIL_IP}/CN=${JAIL_IP}/emailAddress=admin@${JAIL_IP}"
+CMD openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /usr/local/etc/apache24/server.key -out /usr/local/etc/apache24/server.crt -subj "/C=ID/ST=Bangka Belitung/L=Pangkalpinang/O=${JAIL_HOSTNAME}.domain/CN=www.${JAIL_HOSTNAME}.domain/emailAddress=admin@${JAIL_HOSTNAME}.domain"
 CMD chmod 640 /usr/local/etc/apache24/server.key
 CMD chmod 640 /usr/local/etc/apache24/server.crt
-CMD sed -i '' 's%ServerAdmin you@example.com%ServerAdmin admin@${JAIL_IP}%g' /usr/local/etc/apache24/extra/httpd-ssl.conf
-CMD sed -i '' 's%ServerName www.example.com:443%ServerName www.${JAIL_IP}:443%g' /usr/local/etc/apache24/extra/httpd-ssl.conf
+CMD sed -i '' 's%ServerAdmin you@example.com%ServerAdmin admin@${JAIL_HOSTNAME}.domain%g' /usr/local/etc/apache24/extra/httpd-ssl.conf
+CMD sed -i '' 's%ServerName www.example.com:443%ServerName www.${JAIL_HOSTNAME}.domain:443%g' /usr/local/etc/apache24/extra/httpd-ssl.conf
 
 # enable and start apache
 SYSRC apache24_enable=YES
