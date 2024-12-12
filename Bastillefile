@@ -16,8 +16,16 @@ CMD sed -i '' 's%ServerTokens Full%ServerTokens Prod%g' /usr/local/etc/apache24/
 CMD openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /usr/local/etc/apache24/server.key -out /usr/local/etc/apache24/server.crt -subj "/C=ID/ST=Bangka Belitung/L=Pangkalpinang/O=${JAIL_HOSTNAME}.domain/CN=www.${JAIL_HOSTNAME}.domain/emailAddress=admin@${JAIL_HOSTNAME}.domain"
 CMD chmod 640 /usr/local/etc/apache24/server.key
 CMD chmod 640 /usr/local/etc/apache24/server.crt
+CMD sed -i '' '/mod_socache_shmcb.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
+CMD sed -i '' '/mod_ssl.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
+CMD sed -i '' '/httpd-ssl.conf/s/#Include/Include/' /usr/local/etc/apache24/httpd.conf
 CMD sed -i '' 's%ServerAdmin you@example.com%ServerAdmin admin@${JAIL_HOSTNAME}.domain%g' /usr/local/etc/apache24/extra/httpd-ssl.conf
 CMD sed -i '' 's%ServerName www.example.com:443%ServerName www.${JAIL_HOSTNAME}.domain:443%g' /usr/local/etc/apache24/extra/httpd-ssl.conf
+CMD sed -i '' '/mod_rewrite.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
+CMD echo '' >> /usr/local/etc/apache24/httpd.conf
+CMD echo 'RewriteEngine On' >> /usr/local/etc/apache24/httpd.conf
+CMD echo 'RewriteCond %{HTTPS} !=on' >> /usr/local/etc/apache24/httpd.conf
+CMD echo 'RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]' >> /usr/local/etc/apache24/httpd.conf
 
 # enable and start apache
 SYSRC apache24_enable=YES
