@@ -19,9 +19,6 @@ CMD chmod 640 /usr/local/etc/apache24/server.crt
 CMD sed -i '' 's%ServerAdmin you@example.com%ServerAdmin admin@${JAIL_IP}%g' /usr/local/etc/apache24/extra/httpd-ssl.conf
 CMD sed -i '' 's%ServerName www.example.com:443%ServerName www.${JAIL_IP}:443%g' /usr/local/etc/apache24/extra/httpd-ssl.conf
 
-CMD printf "<html><body><h1>It works!</h1></body></html>\n\n" > /usr/local/www/index.html
-CMD rm -rf /usr/local/www/apache24
-
 # enable and start apache
 SYSRC apache24_enable=YES
 SERVICE apache24 start
